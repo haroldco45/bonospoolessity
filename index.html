@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liquidación Essity - Distrileco (Totales Corregidos)</title>
+    <title>Liquidación Essity - Distrileco</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         .input-manual { 
             @apply border-2 border-blue-100 rounded-md px-3 py-2 w-full text-right font-bold text-blue-900 bg-white focus:border-blue-500 outline-none transition-all text-sm;
-            min-width: 155px; 
+            min-width: 160px; 
         }
         .meta-label { @apply text-[10px] text-gray-500 block mb-1 font-semibold; }
         .part-tag { @apply text-[10px] text-blue-600 font-bold block mt-1; }
@@ -18,18 +18,18 @@
         td { @apply px-4 py-3; }
     </style>
 </head>
-<body class="bg-slate-100 p-6 font-sans text-xs">
+<body class="bg-slate-100 p-6 font-sans text-xs text-slate-800">
 
     <div class="max-w-[1900px] mx-auto bg-white p-8 rounded-2xl shadow-2xl border border-gray-200">
         <div class="flex flex-col md:flex-row justify-between items-center mb-8 border-b pb-6 gap-4">
             <div>
                 <h1 class="text-4xl font-black text-blue-900 uppercase italic tracking-tighter">Liquidación Bonus Pool Essity</h1>
-                <p class="text-slate-500 font-bold text-sm uppercase">💾 Autoguardado Activo - Totales de Empresa Corregidos</p>
+                <p class="text-slate-500 font-bold text-sm uppercase">✅ WhatsApp Optimizado / Excel sin "Revoltura"</p>
             </div>
             <div class="flex gap-4">
-                <button onclick="limpiarDatos()" class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition-all text-sm uppercase">🗑️ Borrar Todo</button>
-                <button onclick="exportarExcel()" class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-bold shadow-lg transition-all uppercase tracking-wider text-sm">📥 Excel</button>
-                <button onclick="enviarWhatsApp()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg transition-all uppercase tracking-wider text-sm">💬 WhatsApp</button>
+                <button onclick="limpiarDatos()" class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition-all text-sm uppercase">🗑️ Borrar</button>
+                <button onclick="exportarExcelLimpio()" class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-bold shadow-lg transition-all uppercase tracking-wider text-sm">📥 Excel Limpio</button>
+                <button onclick="enviarWhatsAppResumido()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg transition-all uppercase tracking-wider text-sm">💬 Enviar WhatsApp</button>
             </div>
         </div>
 
@@ -37,39 +37,32 @@
             <table id="tablaLiquidacion" class="w-full border-collapse border border-gray-200 shadow-sm">
                 <thead>
                     <tr class="bg-slate-900 text-white text-[11px] uppercase tracking-widest text-center">
-                        <th class="border border-slate-700" rowspan="2">Vendedor</th>
-                        <th class="border border-slate-700 bg-yellow-600" colspan="3">Avance Mensual (Ingreso Manual)</th>
-                        <th class="border border-slate-700 bg-slate-800" colspan="3">Estadísticas de Venta</th>
-                        <th class="border border-green-800 bg-green-900" colspan="4">Bonos por Categoría</th>
-                        <th class="border border-indigo-800 bg-indigo-900" rowspan="2">Bono Global<br>($175k)</th>
-                        <th class="border border-black bg-black text-base font-black text-green-400" rowspan="2">TOTAL A<br>PAGAR</th>
-                    </tr>
-                    <tr class="bg-slate-200 text-slate-700 text-[10px] uppercase font-bold text-center">
-                        <th class="border border-gray-300">Húmedos Baby</th>
-                        <th class="border border-gray-300">Family Care</th>
-                        <th class="border border-gray-300">Feminine Care</th>
-                        <th class="border border-gray-300">Total Venta</th>
-                        <th class="border border-gray-300">Falta ($)</th>
-                        <th class="border border-gray-300">% Cumpl.</th>
-                        <th class="border border-gray-300">Bono Baby</th>
-                        <th class="border border-gray-300">Bono Family</th>
-                        <th class="border border-gray-300">Bono Fem</th>
-                        <th class="border border-gray-300">Subtotal</th>
+                        <th class="border border-slate-700">Vendedor</th>
+                        <th class="border border-slate-700 bg-yellow-600">Avance Baby</th>
+                        <th class="border border-slate-700 bg-sky-600">Avance Family</th>
+                        <th class="border border-slate-700 bg-pink-600">Avance Fem</th>
+                        <th class="border border-slate-700 bg-slate-800">Total Venta</th>
+                        <th class="border border-slate-700 bg-slate-800">Falta ($)</th>
+                        <th class="border border-slate-700 bg-slate-800">% Cumpl.</th>
+                        <th class="border border-green-800 bg-green-900">Bono Baby</th>
+                        <th class="border border-green-800 bg-green-900">Bono Family</th>
+                        <th class="border border-green-800 bg-green-900">Bono Fem</th>
+                        <th class="border border-green-800 bg-green-900">Bono Global</th>
+                        <th class="border border-black bg-black text-base font-black text-green-400">TOTAL A PAGAR</th>
                     </tr>
                 </thead>
                 <tbody id="vendedoresBody" class="bg-white text-sm"></tbody>
                 <tfoot class="bg-slate-900 text-white font-black text-right uppercase">
                     <tr class="text-sm">
-                        <td class="border border-slate-700 text-center py-6">TOTALES EMPRESA</td>
+                        <td class="border border-slate-700 text-center py-6 uppercase">Totales Empresa</td>
                         <td class="border border-slate-700" id="t-b">$0</td>
                         <td class="border border-slate-700" id="t-fam">$0</td>
                         <td class="border border-slate-700" id="t-fem">$0</td>
-                        <td class="border border-slate-700 font-black text-blue-400" id="t-venta">$0</td>
+                        <td class="border border-slate-700 text-blue-400" id="t-venta">$0</td>
                         <td colspan="2" class="border border-slate-700 text-center" id="status-global">Calculando...</td>
                         <td class="border border-slate-700 text-green-400" id="b-b">$0</td>
                         <td class="border border-slate-700 text-green-400" id="b-fam">$0</td>
                         <td class="border border-slate-700 text-green-400" id="b-fem">$0</td>
-                        <td class="border border-slate-700"></td>
                         <td class="border border-indigo-400" id="b-glob-total">$0</td>
                         <td class="border border-green-400 text-2xl" id="b-gran-total">$0</td>
                     </tr>
@@ -107,8 +100,7 @@
                     <td class="border bg-green-50/40"><span class="bono-val b-baby">$0</span><span class="part-tag p-baby">Part: 0.0%</span></td>
                     <td class="border bg-green-50/40"><span class="bono-val b-fam">$0</span><span class="part-tag p-fam">Part: 0.0%</span></td>
                     <td class="border bg-green-50/40"><span class="bono-val b-fem">$0</span><span class="part-tag p-fem">Part: 0.0%</span></td>
-                    <td class="border font-bold text-slate-500 b-suma-cat">$0</td>
-                    <td class="border bg-indigo-50/40"><span class="bono-val text-indigo-700 b-glob">$0</span><span class="part-tag text-indigo-400 p-glob">Part: 0.0%</span></td>
+                    <td class="border bg-indigo-50/40"><span class="bono-val b-glob">$0</span><span class="part-tag p-glob">Part: 0.0%</span></td>
                     <td class="border bg-green-100 font-black text-green-900 b-final">$0</td>
                 `;
                 body.appendChild(row);
@@ -134,10 +126,7 @@
                 const vt = vb + vfam + vfem;
                 const metaI = vendedores[i].b + vendedores[i].fam + vendedores[i].fem;
 
-                totalesE.b += vb; 
-                totalesE.fam += vfam; 
-                totalesE.fem += vfem; 
-                totalesE.g += vt;
+                totalesE.b += vb; totalesE.fam += vfam; totalesE.fem += vfem; totalesE.g += vt;
 
                 row.querySelector('.row-total').innerText = "$" + vt.toLocaleString();
                 row.querySelector('.row-falta').innerText = "$" + Math.max(0, metaI - vt).toLocaleString();
@@ -150,7 +139,6 @@
 
             localStorage.setItem('distrileco_essity_data', JSON.stringify(storageData));
 
-            // Actualizar fila de TOTALES EMPRESA inmediatamente
             document.getElementById('t-b').innerText = "$" + totalesE.b.toLocaleString();
             document.getElementById('t-fam').innerText = "$" + totalesE.fam.toLocaleString();
             document.getElementById('t-fem').innerText = "$" + totalesE.fem.toLocaleString();
@@ -182,7 +170,6 @@
                 d.row.querySelector('.p-fam').innerText = "Part: " + (pFam * 100).toFixed(1) + "%";
                 d.row.querySelector('.b-fem').innerText = "$" + bFem.toLocaleString();
                 d.row.querySelector('.p-fem').innerText = "Part: " + (pFem * 100).toFixed(1) + "%";
-                d.row.querySelector('.b-suma-cat').innerText = "$" + (bB + bFam + bFem).toLocaleString();
                 d.row.querySelector('.b-glob').innerText = "$" + bGlob.toLocaleString();
                 d.row.querySelector('.p-glob').innerText = "Part: " + (pGlob * 100).toFixed(1) + "%";
 
@@ -199,7 +186,7 @@
             document.getElementById('b-gran-total').innerText = "$" + bonosEmpresa.total.toLocaleString();
 
             const st = document.getElementById('status-global');
-            st.innerText = totalesE.g >= METAS_CAT.global ? "META CUMPLIDA ✅" : "PENDIENTE ❌";
+            st.innerText = totalesE.g >= METAS_CAT.global ? "CUMPLIDA ✅" : "PENDIENTE ❌";
             st.className = totalesE.g >= METAS_CAT.global ? "border border-slate-700 bg-green-600 text-white text-center py-2" : "border border-slate-700 bg-red-600 text-white text-center py-2";
         }
 
@@ -216,26 +203,74 @@
             }
         }
 
-        function limpiarDatos() {
-            if (confirm("¿Seguro que quieres borrar todos los ingresos guardados?")) {
-                localStorage.removeItem('distrileco_essity_data');
-                location.reload();
-            }
+        function exportarExcelLimpio() {
+            const clean = (val) => {
+                if (!val) return 0;
+                let text = val.innerText || val;
+                // EXCLUSIÓN: Solo toma los números, ignora el resto
+                let cleanVal = text.replace(/Meta:|Part:|\$|\.|%|\s/g, '').replace(',', '.');
+                return isNaN(parseFloat(cleanVal)) ? text : parseFloat(cleanVal);
+            };
+
+            const dataExcel = [
+                ["Vendedor", "Venta Baby", "Venta Family", "Venta Fem", "Total Venta", "Falta", "% Cumpl", "Bono Baby", "Bono Family", "Bono Fem", "Bono Global", "TOTAL PAGAR"]
+            ];
+
+            const rows = document.querySelectorAll('#vendedoresBody tr');
+            rows.forEach((row, i) => {
+                dataExcel.push([
+                    row.cells[0].innerText,
+                    parseFloat(row.querySelector('.in-b').value) || 0,
+                    parseFloat(row.querySelector('.in-fam').value) || 0,
+                    parseFloat(row.querySelector('.in-fem').value) || 0,
+                    clean(row.querySelector('.row-total')),
+                    clean(row.querySelector('.row-falta')),
+                    clean(row.querySelector('.row-pct')) / 100,
+                    clean(row.querySelector('.b-baby')),
+                    clean(row.querySelector('.b-fam')),
+                    clean(row.querySelector('.b-fem')),
+                    clean(row.querySelector('.b-glob')),
+                    clean(row.querySelector('.b-final'))
+                ]);
+            });
+
+            const ws = XLSX.utils.aoa_to_sheet(dataExcel);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+            XLSX.writeFile(wb, "Reporte_Essity_Limpio.xlsx");
         }
 
-        function exportarExcel() {
-            const wb = XLSX.utils.table_to_book(document.getElementById('tablaLiquidacion'));
-            XLSX.writeFile(wb, "Liquidacion_Distrileco_PilaNueva.xlsx");
-        }
+        function enviarWhatsAppResumido() {
+            // Mensaje corto para evitar errores de enlace
+            let t = "*BONOS ESSITY - DISTRILECO*%0A";
+            t += "--------------------------%0A";
+            const rows = document.querySelectorAll('#vendedoresBody tr');
+            let hayBonos = false;
 
-        function enviarWhatsApp() {
-            let t = "*LIQUIDACIÓN ESSITY - REPORTE*%0A%0A";
             vendedores.forEach((v, i) => {
                 const total = document.querySelectorAll('.b-final')[i].innerText;
                 const pct = document.querySelectorAll('.row-pct')[i].innerText;
-                if(total !== "$0") t += `*${v.n}* (${pct}): ${total}%0A`;
+                
+                // Solo enviar los que tienen bono para ahorrar espacio
+                if(total !== "$0") {
+                    hayBonos = true;
+                    t += `👤 *${v.n}*%0A💰 Bono: *${total}* (${pct})%0A`;
+                }
             });
+
+            if(!hayBonos) t += "No hay bonos liquidados aún.";
+            
+            t += "--------------------------%0A";
+            t += "*Total Empresa:* " + document.getElementById('b-gran-total').innerText;
+
             window.open(`https://wa.me/573117700431?text=${t}`, '_blank');
+        }
+
+        function limpiarDatos() {
+            if (confirm("¿Borrar todo?")) {
+                localStorage.removeItem('distrileco_essity_data');
+                location.reload();
+            }
         }
 
         window.onload = init;
