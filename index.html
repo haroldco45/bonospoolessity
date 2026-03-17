@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liquidación Essity - Distrileco (Con Autoguardado)</title>
+    <title>Liquidación Essity - Distrileco (Totales Corregidos)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
@@ -24,12 +24,12 @@
         <div class="flex flex-col md:flex-row justify-between items-center mb-8 border-b pb-6 gap-4">
             <div>
                 <h1 class="text-4xl font-black text-blue-900 uppercase italic tracking-tighter">Liquidación Bonus Pool Essity</h1>
-                <p class="text-slate-500 font-bold text-sm uppercase">💾 Autoguardado Activo (Los datos no se pierden)</p>
+                <p class="text-slate-500 font-bold text-sm uppercase">💾 Autoguardado Activo - Totales de Empresa Corregidos</p>
             </div>
             <div class="flex gap-4">
                 <button onclick="limpiarDatos()" class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition-all text-sm uppercase">🗑️ Borrar Todo</button>
-                <button onclick="exportarExcel()" class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-bold shadow-lg transition-all uppercase tracking-wider">📥 Excel</button>
-                <button onclick="enviarWhatsApp()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg transition-all uppercase tracking-wider">💬 WhatsApp</button>
+                <button onclick="exportarExcel()" class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-bold shadow-lg transition-all uppercase tracking-wider text-sm">📥 Excel</button>
+                <button onclick="enviarWhatsApp()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg transition-all uppercase tracking-wider text-sm">💬 WhatsApp</button>
             </div>
         </div>
 
@@ -113,7 +113,7 @@
                 `;
                 body.appendChild(row);
             });
-            cargarDatos(); // Cargar lo guardado al iniciar
+            cargarDatos(); 
         }
 
         function calcular() {
@@ -127,7 +127,6 @@
                 const vfam = Math.round(parseFloat(row.querySelector('.in-fam').value)) || 0;
                 const vfem = Math.round(parseFloat(row.querySelector('.in-fem').value)) || 0;
                 
-                // Guardar valores en objeto para LocalStorage
                 storageData[`v_${i}_b`] = vb;
                 storageData[`v_${i}_fam`] = vfam;
                 storageData[`v_${i}_fem`] = vfem;
@@ -135,7 +134,10 @@
                 const vt = vb + vfam + vfem;
                 const metaI = vendedores[i].b + vendedores[i].fam + vendedores[i].fem;
 
-                totalesE.b += vb; totalesE.fam += vfam; totalesE.fem += vfem; totalesE.g += vt;
+                totalesE.b += vb; 
+                totalesE.fam += vfam; 
+                totalesE.fem += vfem; 
+                totalesE.g += vt;
 
                 row.querySelector('.row-total').innerText = "$" + vt.toLocaleString();
                 row.querySelector('.row-falta').innerText = "$" + Math.max(0, metaI - vt).toLocaleString();
@@ -146,8 +148,13 @@
                            aFem: vfem >= vendedores[i].fem, aG: vt >= metaI });
             });
 
-            // Guardar en memoria local
             localStorage.setItem('distrileco_essity_data', JSON.stringify(storageData));
+
+            // Actualizar fila de TOTALES EMPRESA inmediatamente
+            document.getElementById('t-b').innerText = "$" + totalesE.b.toLocaleString();
+            document.getElementById('t-fam').innerText = "$" + totalesE.fam.toLocaleString();
+            document.getElementById('t-fem').innerText = "$" + totalesE.fem.toLocaleString();
+            document.getElementById('t-venta').innerText = "$" + totalesE.g.toLocaleString();
 
             const sumA = {
                 b: log.reduce((acc, d) => d.aB ? acc + d.vb : acc, 0),
@@ -185,10 +192,6 @@
                 bonosEmpresa.b += bB; bonosEmpresa.fam += bFam; bonosEmpresa.fem += bFem; bonosEmpresa.glob += bGlob;
             });
 
-            document.getElementById('t-b').innerText = "$" + totalesE.b.toLocaleString();
-            document.getElementById('t-family').innerText = "$" + totalesE.fam.toLocaleString();
-            document.getElementById('t-fem').innerText = "$" + totalesE.fem.toLocaleString();
-            document.getElementById('t-venta').innerText = "$" + totalesE.g.toLocaleString();
             document.getElementById('b-b').innerText = "$" + bonosEmpresa.b.toLocaleString();
             document.getElementById('b-family').innerText = "$" + bonosEmpresa.fam.toLocaleString();
             document.getElementById('b-fem').innerText = "$" + bonosEmpresa.fem.toLocaleString();
@@ -205,9 +208,9 @@
             if (saved) {
                 const data = JSON.parse(saved);
                 vendedores.forEach((_, i) => {
-                    if(data[`v_${i}_b`]) document.getElementById(`in-b-${i}`).value = data[`v_${i}_b`];
-                    if(data[`v_${i}_fam`]) document.getElementById(`in-fam-${i}`).value = data[`v_${i}_fam`];
-                    if(data[`v_${i}_fem`]) document.getElementById(`in-fem-${i}`).value = data[`v_${i}_fem`];
+                    if(data[`v_${i}_b`] !== undefined) document.getElementById(`in-b-${i}`).value = data[`v_${i}_b`];
+                    if(data[`v_${i}_fam`] !== undefined) document.getElementById(`in-fam-${i}`).value = data[`v_${i}_fam`];
+                    if(data[`v_${i}_fem`] !== undefined) document.getElementById(`in-fem-${i}`).value = data[`v_${i}_fem`];
                 });
                 calcular();
             }
@@ -222,11 +225,11 @@
 
         function exportarExcel() {
             const wb = XLSX.utils.table_to_book(document.getElementById('tablaLiquidacion'));
-            XLSX.writeFile(wb, "Liquidacion_Autoguardado_Distrileco.xlsx");
+            XLSX.writeFile(wb, "Liquidacion_Distrileco_PilaNueva.xlsx");
         }
 
         function enviarWhatsApp() {
-            let t = "*LIQUIDACIÓN ESSITY - ACTUALIZADA*%0A%0A";
+            let t = "*LIQUIDACIÓN ESSITY - REPORTE*%0A%0A";
             vendedores.forEach((v, i) => {
                 const total = document.querySelectorAll('.b-final')[i].innerText;
                 const pct = document.querySelectorAll('.row-pct')[i].innerText;
