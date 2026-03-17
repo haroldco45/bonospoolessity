@@ -3,71 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liquidación Final Bonus Pool - Essity</title>
+    <title>Liquidación Essity - Distrileco (Precisión %)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        .input-manual { @apply border border-blue-200 rounded px-1 py-1 w-full text-right font-bold text-blue-900 bg-white focus:ring-1 focus:ring-blue-500 outline-none text-[10px]; }
-        .meta-label { @apply text-[8px] text-gray-400 block font-normal; }
-        .part-tag { @apply text-[8px] text-blue-500 font-bold block mt-0.5; }
-        .bono-val { @apply font-black text-green-700 block; }
-        .bg-cumple { @apply bg-green-100 text-green-800 border-green-500; }
-        .bg-falta { @apply bg-red-50 text-red-600 border-red-200; }
+        .input-manual { 
+            @apply border-2 border-blue-100 rounded-md px-3 py-2 w-full text-right font-bold text-blue-900 bg-white focus:border-blue-500 outline-none transition-all text-sm;
+            min-width: 150px; /* Cajones amplios */
+        }
+        .meta-label { @apply text-[10px] text-gray-500 block mb-1 font-semibold; }
+        .part-tag { @apply text-[10px] text-blue-600 font-bold block mt-1; }
+        .bono-val { @apply font-black text-green-700 block text-sm; }
+        th { @apply whitespace-nowrap px-6 py-4; }
+        td { @apply px-4 py-3; }
     </style>
 </head>
-<body class="bg-slate-100 p-2 font-sans text-[10px]">
+<body class="bg-slate-100 p-6 font-sans text-xs">
 
-    <div class="max-w-[1600px] mx-auto bg-white p-4 rounded-xl shadow-lg border border-gray-200">
-        <div class="flex justify-between items-center mb-4 border-b pb-3">
+    <div class="max-w-[1850px] mx-auto bg-white p-8 rounded-2xl shadow-2xl border border-gray-200">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-8 border-b pb-6 gap-4">
             <div>
-                <h1 class="text-xl font-black text-slate-800 uppercase italic">Sistema de Liquidación Bonus Pool Essity</h1>
-                <p class="text-slate-500 uppercase font-bold text-[9px]">Distrileco S.A.S - Control de Metas y Participación</p>
+                <h1 class="text-4xl font-black text-blue-900 uppercase italic tracking-tighter">Liquidación Bonus Pool Essity</h1>
+                <p class="text-slate-500 font-bold text-sm uppercase">Pesos en Enteros / Porcentajes con 1 Decimal</p>
             </div>
-            <div class="flex gap-2">
-                <button onclick="exportarExcel()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-bold shadow-sm">📥 EXPORTAR EXCEL</button>
-                <button onclick="enviarWhatsApp()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded font-bold shadow-sm">💬 ENVIAR WHATSAPP (3117700431)</button>
+            <div class="flex gap-4">
+                <button onclick="exportarExcel()" class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-bold shadow-lg transition-all transform hover:scale-105 uppercase tracking-wider">📥 Excel Profesional</button>
+                <button onclick="enviarWhatsApp()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg transition-all transform hover:scale-105 uppercase tracking-wider text-sm">💬 Reporte WhatsApp</button>
             </div>
         </div>
 
         <div class="overflow-x-auto">
             <table id="tablaLiquidacion" class="w-full border-collapse border border-gray-200 shadow-sm">
                 <thead>
-                    <tr class="bg-slate-900 text-white text-[9px] uppercase tracking-wider text-center">
-                        <th class="p-2 border border-slate-700" rowspan="2">Vendedor</th>
-                        <th class="p-2 border border-slate-700 bg-yellow-600" colspan="3">Ingreso de Avance Manual</th>
-                        <th class="p-2 border border-slate-700 bg-slate-800" colspan="3">Estadísticas Individuales</th>
-                        <th class="p-2 border border-green-800 bg-green-900" colspan="4">Desglose de Bonos por Categoría</th>
-                        <th class="p-2 border border-indigo-800 bg-indigo-900" rowspan="2">Bono Global<br>($175.000)</th>
-                        <th class="p-2 border border-slate-900 bg-black text-xs font-black" rowspan="2">TOTAL A<br>PAGAR</th>
+                    <tr class="bg-slate-900 text-white text-[11px] uppercase tracking-widest text-center">
+                        <th class="border border-slate-700" rowspan="2">Vendedor</th>
+                        <th class="border border-slate-700 bg-yellow-600" colspan="3">Avance Mensual (Ingreso Manual)</th>
+                        <th class="border border-slate-700 bg-slate-800" colspan="3">Estadísticas de Venta</th>
+                        <th class="border border-green-800 bg-green-900" colspan="4">Bonos por Categoría</th>
+                        <th class="border border-indigo-800 bg-indigo-900" rowspan="2">Bono Global<br>($175k)</th>
+                        <th class="border border-black bg-black text-base font-black text-green-400" rowspan="2">TOTAL A<br>PAGAR</th>
                     </tr>
-                    <tr class="bg-slate-200 text-slate-700 text-[8px] uppercase font-bold text-center">
-                        <th class="p-2 border">H. Baby</th>
-                        <th class="p-2 border">Family Care</th>
-                        <th class="p-2 border">Feminine Care</th>
-                        <th class="p-2 border">Total Venta</th>
-                        <th class="p-2 border">Falta ($)</th>
-                        <th class="p-2 border">% Cumpl.</th>
-                        <th class="p-2 border">Bono Baby</th>
-                        <th class="p-2 border">Bono Family</th>
-                        <th class="p-2 border">Bono Fem</th>
-                        <th class="p-2 border">Suma Categorías</th>
+                    <tr class="bg-slate-200 text-slate-700 text-[10px] uppercase font-bold text-center">
+                        <th class="border border-gray-300">Húmedos Baby</th>
+                        <th class="border border-gray-300">Family Care</th>
+                        <th class="border border-gray-300">Feminine Care</th>
+                        <th class="border border-gray-300">Total Venta</th>
+                        <th class="border border-gray-300">Falta ($)</th>
+                        <th class="border border-gray-300">% Cumpl.</th>
+                        <th class="border border-gray-300">Bono Baby</th>
+                        <th class="border border-gray-300">Bono Family</th>
+                        <th class="border border-gray-300">Bono Fem</th>
+                        <th class="border border-gray-300">Subtotal</th>
                     </tr>
                 </thead>
-                <tbody id="vendedoresBody"></tbody>
+                <tbody id="vendedoresBody" class="bg-white text-sm"></tbody>
                 <tfoot class="bg-slate-900 text-white font-black text-right uppercase">
-                    <tr>
-                        <td class="p-2 border border-slate-700 text-center">TOTALES EMPRESA</td>
-                        <td class="p-2 border border-slate-700" id="t-b">$0</td>
-                        <td class="p-2 border border-slate-700" id="t-fam">$0</td>
-                        <td class="p-2 border border-slate-700" id="t-fem">$0</td>
-                        <td class="p-2 border border-slate-700" id="t-venta">$0</td>
-                        <td colspan="2" class="p-2 border border-slate-700 text-[8px] italic text-center" id="status-global">Esperando Meta Global...</td>
-                        <td class="p-2 border border-slate-700 text-green-400" id="b-b">$0</td>
-                        <td class="p-2 border border-slate-700 text-green-400" id="b-fam">$0</td>
-                        <td class="p-2 border border-slate-700 text-green-400" id="b-fem">$0</td>
-                        <td class="p-2 border border-slate-700"></td>
-                        <td class="p-2 border border-indigo-400" id="b-glob-total">$0</td>
-                        <td class="p-2 border border-green-400 text-sm" id="b-gran-total">$0</td>
+                    <tr class="text-sm">
+                        <td class="border border-slate-700 text-center py-6">TOTALES EMPRESA</td>
+                        <td class="border border-slate-700" id="t-b">$0</td>
+                        <td class="border border-slate-700" id="t-fam">$0</td>
+                        <td class="border border-slate-700" id="t-fem">$0</td>
+                        <td class="border border-slate-700 font-black text-blue-400" id="t-venta">$0</td>
+                        <td colspan="2" class="border border-slate-700 text-center" id="status-global">Calculando...</td>
+                        <td class="border border-slate-700 text-green-400" id="b-b">$0</td>
+                        <td class="border border-slate-700 text-green-400" id="b-fam">$0</td>
+                        <td class="border border-slate-700 text-green-400" id="b-fem">$0</td>
+                        <td class="border border-slate-700"></td>
+                        <td class="border border-indigo-400" id="b-glob-total">$0</td>
+                        <td class="border border-green-400 text-2xl" id="b-gran-total">$0</td>
                     </tr>
                 </tfoot>
             </table>
@@ -91,25 +94,21 @@
             const body = document.getElementById('vendedoresBody');
             vendedores.forEach((v, i) => {
                 const row = document.createElement('tr');
-                row.className = "hover:bg-slate-50 border-b text-right";
+                row.className = "hover:bg-blue-50/50 border-b text-right transition-colors";
                 row.innerHTML = `
-                    <td class="p-2 font-bold text-slate-800 bg-slate-50 border text-left uppercase">${v.n}</td>
-                    <td class="p-1 border bg-yellow-50/30"><span class="meta-label">Meta: ${v.b.toLocaleString()}</span><input type="number" class="input-manual in-b" oninput="calcular()"></td>
-                    <td class="p-1 border bg-sky-50/30"><span class="meta-label">Meta: ${v.fam.toLocaleString()}</span><input type="number" class="input-manual in-fam" oninput="calcular()"></td>
-                    <td class="p-1 border bg-pink-50/30"><span class="meta-label">Meta: ${v.fem.toLocaleString()}</span><input type="number" class="input-manual in-fem" oninput="calcular()"></td>
-                    
-                    <td class="p-2 border font-bold text-slate-600 row-total">$0</td>
-                    <td class="p-2 border font-bold text-red-600 row-falta">$0</td>
-                    <td class="p-2 border text-center font-black row-pct">0%</td>
-
-                    <td class="p-2 border bg-green-50/20"><span class="bono-val b-baby">$0</span><span class="part-tag p-baby">Part: 0%</span></td>
-                    <td class="p-2 border bg-green-50/20"><span class="bono-val b-fam">$0</span><span class="part-tag p-fam">Part: 0%</span></td>
-                    <td class="p-2 border bg-green-50/20"><span class="bono-val b-fem">$0</span><span class="part-tag p-fem">Part: 0%</span></td>
-                    <td class="p-2 border font-bold text-slate-500 b-suma-cat">$0</td>
-
-                    <td class="p-2 border bg-indigo-50/30"><span class="bono-val text-indigo-700 b-glob">$0</span><span class="part-tag text-indigo-400 p-glob">Part: 0%</span></td>
-                    
-                    <td class="p-2 border bg-green-100 font-black text-green-900 text-xs b-final">$0</td>
+                    <td class="p-4 font-bold text-slate-800 bg-slate-50 border text-left uppercase">${v.n}</td>
+                    <td class="border bg-yellow-50/20"><span class="meta-label">Meta: ${v.b.toLocaleString()}</span><input type="number" class="input-manual in-b" oninput="calcular()"></td>
+                    <td class="border bg-sky-50/20"><span class="meta-label">Meta: ${v.fam.toLocaleString()}</span><input type="number" class="input-manual in-fam" oninput="calcular()"></td>
+                    <td class="border bg-pink-50/20"><span class="meta-label">Meta: ${v.fem.toLocaleString()}</span><input type="number" class="input-manual in-fem" oninput="calcular()"></td>
+                    <td class="border font-black text-slate-700 row-total">$0</td>
+                    <td class="border font-bold text-red-600 row-falta">$0</td>
+                    <td class="border text-center font-black row-pct text-blue-700">0.0%</td>
+                    <td class="border bg-green-50/40"><span class="bono-val b-baby">$0</span><span class="part-tag p-baby">Part: 0.0%</span></td>
+                    <td class="border bg-green-50/40"><span class="bono-val b-fam">$0</span><span class="part-tag p-fam">Part: 0.0%</span></td>
+                    <td class="border bg-green-50/40"><span class="bono-val b-fem">$0</span><span class="part-tag p-fem">Part: 0.0%</span></td>
+                    <td class="border font-bold text-slate-500 b-suma-cat">$0</td>
+                    <td class="border bg-indigo-50/40"><span class="bono-val text-indigo-700 b-glob">$0</span><span class="part-tag text-indigo-400 p-glob">Part: 0.0%</span></td>
+                    <td class="border bg-green-100 font-black text-green-900 b-final">$0</td>
                 `;
                 body.appendChild(row);
             });
@@ -120,106 +119,87 @@
             let totalesE = { b: 0, fam: 0, fem: 0, g: 0 };
             let log = [];
 
-            // 1. Recolección de datos y totales
             rows.forEach((row, i) => {
-                const vb = parseFloat(row.querySelector('.in-b').value) || 0;
-                const vfam = parseFloat(row.querySelector('.in-fam').value) || 0;
-                const vfem = parseFloat(row.querySelector('.in-fem').value) || 0;
+                const vb = Math.round(parseFloat(row.querySelector('.in-b').value)) || 0;
+                const vfam = Math.round(parseFloat(row.querySelector('.in-fam').value)) || 0;
+                const vfem = Math.round(parseFloat(row.querySelector('.in-fem').value)) || 0;
                 const vt = vb + vfam + vfem;
                 const metaI = vendedores[i].b + vendedores[i].fam + vendedores[i].fem;
 
                 totalesE.b += vb; totalesE.fam += vfam; totalesE.fem += vfem; totalesE.g += vt;
 
-                const falta = Math.max(0, metaI - vt);
-                const pct = (vt / metaI) * 100;
-
-                row.querySelector('.row-total').innerText = "$" + Math.round(vt).toLocaleString();
-                row.querySelector('.row-falta').innerText = "$" + Math.round(falta).toLocaleString();
-                row.querySelector('.row-pct').innerText = pct.toFixed(1) + "%";
-                row.querySelector('.row-pct').className = pct >= 100 ? "p-2 border text-center font-black text-green-600 bg-green-50" : "p-2 border text-center font-black text-red-500";
+                row.querySelector('.row-total').innerText = "$" + vt.toLocaleString();
+                row.querySelector('.row-falta').innerText = "$" + Math.max(0, metaI - vt).toLocaleString();
+                // Porcentaje de cumplimiento con 1 decimal
+                row.querySelector('.row-pct').innerText = ((vt / metaI) * 100).toFixed(1) + "%";
 
                 log.push({ vb, vfam, vfem, vt, metaI, row,
-                           aptB: vb >= vendedores[i].b, aptFam: vfam >= vendedores[i].fam, 
-                           aptFem: vfem >= vendedores[i].fem, aptG: vt >= metaI });
+                           aB: vb >= vendedores[i].b, aFam: vfam >= vendedores[i].fam, 
+                           aFem: vfem >= vendedores[i].fem, aG: vt >= metaI });
             });
 
-            // 2. Sumas para divisores proporcionales
-            const sumAptos = {
-                b: log.reduce((acc, d) => d.aptB ? acc + d.vb : acc, 0),
-                fam: log.reduce((acc, d) => d.aptFam ? acc + d.vfam : acc, 0),
-                fem: log.reduce((acc, d) => d.aptFem ? acc + d.vfem : acc, 0),
-                global: log.reduce((acc, d) => d.aptG ? acc + d.vt : acc, 0)
+            const sumA = {
+                b: log.reduce((acc, d) => d.aB ? acc + d.vb : acc, 0),
+                fam: log.reduce((acc, d) => d.aFam ? acc + d.vfam : acc, 0),
+                fem: log.reduce((acc, d) => d.aFem ? acc + d.vfem : acc, 0),
+                global: log.reduce((acc, d) => d.aG ? acc + d.vt : acc, 0)
             };
 
             let bonosEmpresa = { b: 0, fam: 0, fem: 0, glob: 0, total: 0 };
 
-            // 3. Cálculo de Liquidación por Vendedor
             log.forEach(d => {
-                // Participación
-                const pB = (sumAptos.b > 0 && d.aptB) ? d.vb / sumAptos.b : 0;
-                const pFam = (sumAptos.fam > 0 && d.aptFam) ? d.vfam / sumAptos.fam : 0;
-                const pFem = (sumAptos.fem > 0 && d.aptFem) ? d.vfem / sumAptos.fem : 0;
-                const pGlob = (sumAptos.global > 0 && d.aptG) ? d.vt / sumAptos.global : 0;
+                const pB = (sumA.b > 0 && d.aB) ? d.vb / sumA.b : 0;
+                const pFam = (sumA.fam > 0 && d.aFam) ? d.vfam / sumA.fam : 0;
+                const pFem = (sumA.fem > 0 && d.aFem) ? d.vfem / sumA.fem : 0;
+                const pGlob = (sumA.global > 0 && d.aG) ? d.vt / sumA.global : 0;
 
-                // Bonos monetarios
-                const bB = (totalesE.b >= METAS_CAT.b) ? pB * BOLSAS.b : 0;
-                const bFam = (totalesE.fam >= METAS_CAT.fam) ? pFam * BOLSAS.fam : 0;
-                const bFem = (totalesE.fem >= METAS_CAT.fem) ? pFem * BOLSAS.fem : 0;
-                const bGlob = (totalesE.g >= METAS_CAT.global) ? pGlob * BOLSAS.global : 0;
+                const bB = (totalesE.b >= METAS_CAT.b) ? Math.round(pB * BOLSAS.b) : 0;
+                const bFam = (totalesE.fam >= METAS_CAT.fam) ? Math.round(pFam * BOLSAS.fam) : 0;
+                const bFem = (totalesE.fem >= METAS_CAT.fem) ? Math.round(pFem * BOLSAS.fem) : 0;
+                const bGlob = (totalesE.g >= METAS_CAT.global) ? Math.round(pGlob * BOLSAS.global) : 0;
 
-                // Actualizar interfaz
-                d.row.querySelector('.b-baby').innerText = "$" + Math.round(bB).toLocaleString();
-                d.row.querySelector('.p-baby').innerText = "Part: " + (pB*100).toFixed(1) + "%";
-                d.row.querySelector('.b-fam').innerText = "$" + Math.round(bFam).toLocaleString();
-                d.row.querySelector('.p-fam').innerText = "Part: " + (pFam*100).toFixed(1) + "%";
-                d.row.querySelector('.b-fem').innerText = "$" + Math.round(bFem).toLocaleString();
-                d.row.querySelector('.p-fem').innerText = "Part: " + (pFem*100).toFixed(1) + "%";
-                d.row.querySelector('.b-suma-cat').innerText = "$" + Math.round(bB + bFam + bFem).toLocaleString();
+                d.row.querySelector('.b-baby').innerText = "$" + bB.toLocaleString();
+                d.row.querySelector('.p-baby').innerText = "Part: " + (pB * 100).toFixed(1) + "%";
+                d.row.querySelector('.b-fam').innerText = "$" + bFam.toLocaleString();
+                d.row.querySelector('.p-fam').innerText = "Part: " + (pFam * 100).toFixed(1) + "%";
+                d.row.querySelector('.b-fem').innerText = "$" + bFem.toLocaleString();
+                d.row.querySelector('.p-fem').innerText = "Part: " + (pFem * 100).toFixed(1) + "%";
+                d.row.querySelector('.b-suma-cat').innerText = "$" + (bB + bFam + bFem).toLocaleString();
+                d.row.querySelector('.b-glob').innerText = "$" + bGlob.toLocaleString();
+                d.row.querySelector('.p-glob').innerText = "Part: " + (pGlob * 100).toFixed(1) + "%";
 
-                d.row.querySelector('.b-glob').innerText = "$" + Math.round(bGlob).toLocaleString();
-                d.row.querySelector('.p-glob').innerText = "Part: " + (pGlob*100).toFixed(1) + "%";
-
-                const granTotalVendedor = bB + bFam + bFem + bGlob;
-                d.row.querySelector('.b-final').innerText = "$" + Math.round(granTotalVendedor).toLocaleString();
-
-                bonosEmpresa.b += bB; bonosEmpresa.fam += bFam; 
-                bonosEmpresa.fem += bFem; bonosEmpresa.glob += bGlob; bonosEmpresa.total += granTotalVendedor;
+                const total = bB + bFam + bFem + bGlob;
+                d.row.querySelector('.b-final').innerText = "$" + total.toLocaleString();
+                bonosEmpresa.total += total;
+                bonosEmpresa.b += bB; bonosEmpresa.fam += bFam; bonosEmpresa.fem += bFem; bonosEmpresa.glob += bGlob;
             });
 
-            // 4. Totales de pie de tabla
-            document.getElementById('t-b').innerText = "$" + Math.round(totalesE.b).toLocaleString();
-            document.getElementById('t-family').innerText = "$" + Math.round(totalesE.fam).toLocaleString();
-            document.getElementById('t-fem').innerText = "$" + Math.round(totalesE.fem).toLocaleString();
-            document.getElementById('t-venta').innerText = "$" + Math.round(totalesE.g).toLocaleString();
-            
-            const stGlob = document.getElementById('status-global');
-            if (totalesE.g >= METAS_CAT.global) {
-                stGlob.innerText = "¡META GLOBAL CUMPLIDA! ✅";
-                stGlob.className = "p-2 border border-slate-700 bg-green-600 text-white text-center text-[8px]";
-            } else {
-                stGlob.innerText = "META GLOBAL PENDIENTE ❌";
-                stGlob.className = "p-2 border border-slate-700 bg-red-600 text-white text-center text-[8px]";
-            }
+            document.getElementById('t-b').innerText = "$" + totalesE.b.toLocaleString();
+            document.getElementById('t-family').innerText = "$" + totalesE.fam.toLocaleString();
+            document.getElementById('t-fem').innerText = "$" + totalesE.fem.toLocaleString();
+            document.getElementById('t-venta').innerText = "$" + totalesE.g.toLocaleString();
+            document.getElementById('b-b').innerText = "$" + bonosEmpresa.b.toLocaleString();
+            document.getElementById('b-family').innerText = "$" + bonosEmpresa.fam.toLocaleString();
+            document.getElementById('b-fem').innerText = "$" + bonosEmpresa.fem.toLocaleString();
+            document.getElementById('b-glob-total').innerText = "$" + bonosEmpresa.glob.toLocaleString();
+            document.getElementById('b-gran-total').innerText = "$" + bonosEmpresa.total.toLocaleString();
 
-            document.getElementById('b-b').innerText = "$" + Math.round(bonosEmpresa.b).toLocaleString();
-            document.getElementById('b-family').innerText = "$" + Math.round(bonosEmpresa.fam).toLocaleString();
-            document.getElementById('b-fem').innerText = "$" + Math.round(bonosEmpresa.fem).toLocaleString();
-            document.getElementById('b-glob-total').innerText = "$" + Math.round(bonosEmpresa.glob).toLocaleString();
-            document.getElementById('b-gran-total').innerText = "$" + Math.round(bonosEmpresa.total).toLocaleString();
+            const st = document.getElementById('status-global');
+            st.innerText = totalesE.g >= METAS_CAT.global ? "META CUMPLIDA ✅" : "PENDIENTE ❌";
+            st.className = totalesE.g >= METAS_CAT.global ? "border border-slate-700 bg-green-600 text-white text-center py-2" : "border border-slate-700 bg-red-600 text-white text-center py-2";
         }
 
         function exportarExcel() {
             const wb = XLSX.utils.table_to_book(document.getElementById('tablaLiquidacion'));
-            XLSX.writeFile(wb, "Liquidacion_Final_Distrileco.xlsx");
+            XLSX.writeFile(wb, "Reporte_Essity_Distrileco_Final.xlsx");
         }
 
         function enviarWhatsApp() {
-            let t = "*LIQUIDACIÓN FINAL ESSITY*%0A%0A";
-            const rows = document.querySelectorAll('#vendedoresBody tr');
+            let t = "*LIQUIDACIÓN ESSITY - REPORTE*%0A%0A";
             vendedores.forEach((v, i) => {
-                const total = rows[i].querySelector('.b-final').innerText;
-                const pct = rows[i].querySelector('.row-pct').innerText;
-                t += `*${v.n}*%0A📈 Cumpl: ${pct}%0A💰 *PAGO TOTAL: ${total}*%0A---%0A`;
+                const total = document.querySelectorAll('.b-final')[i].innerText;
+                const pct = document.querySelectorAll('.row-pct')[i].innerText;
+                if(total !== "$0") t += `*${v.n}* (${pct}): ${total}%0A`;
             });
             window.open(`https://wa.me/573117700431?text=${t}`, '_blank');
         }
