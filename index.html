@@ -7,27 +7,20 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        /* CAJONES BLANCOS RESALTADOS PARA QUE NO SE VEA APELLUZCADO */
         .input-manual { 
             @apply border-2 rounded-lg px-3 py-2 w-full text-right font-black text-slate-900 bg-white shadow-md outline-none transition-all text-sm mb-1;
             min-width: 160px; 
         }
-        /* Colores de borde para identificar cada categoría rápido */
-        .in-b { border-color: #facc15; } /* Amarillo */
-        .in-fam { border-color: #38bdf8; } /* Azul */
-        .in-fem { border-color: #f472b6; } /* Rosado */
-        
+        .in-b { border-color: #facc15; }
+        .in-fam { border-color: #38bdf8; }
+        .in-fem { border-color: #f472b6; }
         .input-manual:focus { @apply ring-4 ring-slate-900 ring-opacity-20; }
-        
         .meta-label { @apply text-[10px] text-slate-600 block mb-1 font-bold uppercase tracking-tighter; }
         .part-tag { @apply text-[9px] text-blue-600 font-bold block mt-1 bg-blue-50 px-1 rounded; }
         .bono-val { @apply font-black text-green-700 block text-sm; }
-        
         th { @apply whitespace-nowrap px-4 py-3 text-[10px] font-black uppercase tracking-widest; }
         td { @apply px-3 py-4 border-r border-slate-100; }
-        
-        /* Diferencia visual de fondo entre entrada y salida */
-        .seccion-ingreso { background-color: #f1f5f9; } /* Gris azulado suave */
+        .seccion-ingreso { background-color: #f1f5f9; }
         .seccion-resultado { background-color: #ffffff; }
     </style>
 </head>
@@ -74,15 +67,16 @@
                         <td class="p-6 border-r border-slate-700 text-pink-400 text-lg" id="t-fem">$0</td>
                         <td class="p-6 border-r border-slate-700 text-white bg-slate-800" id="t-venta">$0</td>
                         <td colspan="2" class="p-6 border-r border-slate-700 text-center" id="status-global">Calculando...</td>
-                        <td class="p-6 border-r border-slate-700 text-green-400" id="b-b">$0</td>
-                        <td class="p-6 border-r border-slate-700 text-green-400" id="b-fam">$0</td>
-                        <td class="p-6 border-r border-slate-700 text-green-400" id="b-fem">$0</td>
+                        <td class="p-6 border-r border-slate-700 text-green-400" id="b-b-total">$0</td>
+                        <td class="p-6 border-r border-slate-700 text-green-400" id="b-fam-total">$0</td>
+                        <td class="p-6 border-r border-slate-700 text-green-400" id="b-fem-total">$0</td>
                         <td class="p-6 border-r border-slate-700 text-green-400" id="b-glob-total">$0</td>
                         <td class="p-6 bg-green-900 text-green-300 text-4xl" id="b-gran-total">$0</td>
                     </tr>
                 </tfoot>
             </table>
         </div>
+        <p class="mt-4 text-slate-500 font-bold">App desarrollada por vibras positivas HM derecho de autor (3117700431)</p>
     </div>
 
     <script>
@@ -108,15 +102,13 @@
                     <td class="seccion-ingreso border-r"><span class="meta-label">Meta: ${Math.round(v.b).toLocaleString()}</span><input type="number" id="in-b-${i}" class="input-manual in-b" oninput="calcular()"></td>
                     <td class="seccion-ingreso border-r"><span class="meta-label">Meta: ${Math.round(v.fam).toLocaleString()}</span><input type="number" id="in-fam-${i}" class="input-manual in-fam" oninput="calcular()"></td>
                     <td class="seccion-ingreso border-r"><span class="meta-label">Meta: ${Math.round(v.fem).toLocaleString()}</span><input type="number" id="in-fem-${i}" class="input-manual in-fem" oninput="calcular()"></td>
-                    
                     <td class="seccion-resultado border-r font-black text-slate-700 row-total">$0</td>
                     <td class="seccion-resultado border-r font-bold text-rose-600 row-falta">$0</td>
                     <td class="seccion-resultado border-r text-center font-black row-pct text-blue-900 text-base">0.0%</td>
-
-                    <td class="seccion-resultado border-r bg-green-50/50"><span class="bono-val b-baby">$0</span><span class="part-tag p-baby">Part: 0.0%</span></td>
-                    <td class="seccion-resultado border-r bg-green-50/50"><span class="bono-val b-fam">$0</span><span class="part-tag p-fam">Part: 0.0%</span></td>
-                    <td class="seccion-resultado border-r bg-green-50/50"><span class="bono-val b-fem">$0</span><span class="part-tag p-fem">Part: 0.0%</span></td>
-                    <td class="seccion-resultado border-r bg-green-50/50"><span class="bono-val text-indigo-700 b-glob">$0</span><span class="part-tag p-glob">Part: 0.0%</span></td>
+                    <td class="seccion-resultado border-r bg-green-50/50"><span class="bono-val b-baby-val">$0</span><span class="part-tag p-baby">Part: 0.0%</span></td>
+                    <td class="seccion-resultado border-r bg-green-50/50"><span class="bono-val b-fam-val">$0</span><span class="part-tag p-fam">Part: 0.0%</span></td>
+                    <td class="seccion-resultado border-r bg-green-50/50"><span class="bono-val b-fem-val">$0</span><span class="part-tag p-fem">Part: 0.0%</span></td>
+                    <td class="seccion-resultado border-r bg-green-50/50"><span class="bono-val text-indigo-700 b-glob-val">$0</span><span class="part-tag p-glob">Part: 0.0%</span></td>
                     <td class="bg-green-100 font-black text-green-900 text-base b-final text-lg">$0</td>
                 `;
                 body.appendChild(row);
@@ -131,9 +123,9 @@
             let storageData = {};
 
             rows.forEach((row, i) => {
-                const vb = Math.round(parseFloat(row.querySelector('.in-b').value)) || 0;
-                const vfam = Math.round(parseFloat(row.querySelector('.in-fam').value)) || 0;
-                const vfem = Math.round(parseFloat(row.querySelector('.in-fem').value)) || 0;
+                const vb = parseFloat(document.getElementById(`in-b-${i}`).value) || 0;
+                const vfam = parseFloat(document.getElementById(`in-fam-${i}`).value) || 0;
+                const vfem = parseFloat(document.getElementById(`in-fem-${i}`).value) || 0;
                 
                 storageData[`v_${i}_b`] = vb;
                 storageData[`v_${i}_fam`] = vfam;
@@ -144,7 +136,7 @@
 
                 totalesE.b += vb; totalesE.fam += vfam; totalesE.fem += vfem; totalesE.g += vt;
 
-                row.querySelector('.row-total').innerText = "$" + vt.toLocaleString();
+                row.querySelector('.row-total').innerText = "$" + Math.round(vt).toLocaleString();
                 row.querySelector('.row-falta').innerText = "$" + Math.max(0, Math.round(metaI - vt)).toLocaleString();
                 row.querySelector('.row-pct').innerText = ((vt / metaI) * 100).toFixed(1) + "%";
 
@@ -155,10 +147,10 @@
 
             localStorage.setItem('distrileco_essity_data', JSON.stringify(storageData));
 
-            document.getElementById('t-b').innerText = "$" + totalesE.b.toLocaleString();
-            document.getElementById('t-fam').innerText = "$" + totalesE.fam.toLocaleString();
-            document.getElementById('t-fem').innerText = "$" + totalesE.fem.toLocaleString();
-            document.getElementById('t-venta').innerText = "$" + totalesE.g.toLocaleString();
+            document.getElementById('t-b').innerText = "$" + Math.round(totalesE.b).toLocaleString();
+            document.getElementById('t-fam').innerText = "$" + Math.round(totalesE.fam).toLocaleString();
+            document.getElementById('t-fem').innerText = "$" + Math.round(totalesE.fem).toLocaleString();
+            document.getElementById('t-venta').innerText = "$" + Math.round(totalesE.g).toLocaleString();
 
             const sumA = {
                 b: log.reduce((acc, d) => d.aB ? acc + d.vb : acc, 0),
@@ -180,30 +172,32 @@
                 const bFem = (totalesE.fem >= METAS_CAT.fem) ? Math.round(pFem * BOLSAS.fem) : 0;
                 const bGlob = (totalesE.g >= METAS_CAT.global) ? Math.round(pGlob * BOLSAS.global) : 0;
 
-                d.row.querySelector('.b-baby').innerText = "$" + bB.toLocaleString();
+                d.row.querySelector('.b-baby-val').innerText = "$" + bB.toLocaleString();
                 d.row.querySelector('.p-baby').innerText = "Part: " + (pB * 100).toFixed(1) + "%";
-                d.row.querySelector('.b-fam').innerText = "$" + bFam.toLocaleString();
+                d.row.querySelector('.b-fam-val').innerText = "$" + bFam.toLocaleString();
                 d.row.querySelector('.p-fam').innerText = "Part: " + (pFam * 100).toFixed(1) + "%";
-                d.row.querySelector('.b-fem').innerText = "$" + bFem.toLocaleString();
+                d.row.querySelector('.b-fem-val').innerText = "$" + bFem.toLocaleString();
                 d.row.querySelector('.p-fem').innerText = "Part: " + (pFem * 100).toFixed(1) + "%";
-                d.row.querySelector('.b-glob').innerText = "$" + bGlob.toLocaleString();
+                d.row.querySelector('.b-glob-val').innerText = "$" + bGlob.toLocaleString();
                 d.row.querySelector('.p-glob').innerText = "Part: " + (pGlob * 100).toFixed(1) + "%";
 
-                const total = bB + bFam + bFem + bGlob;
-                d.row.querySelector('.b-final').innerText = "$" + total.toLocaleString();
-                bonosEmpresa.total += total;
+                const totalV = bB + bFam + bFem + bGlob;
+                d.row.querySelector('.b-final').innerText = "$" + totalV.toLocaleString();
+                
+                bonosEmpresa.total += totalV;
                 bonosEmpresa.b += bB; bonosEmpresa.fam += bFam; bonosEmpresa.fem += bFem; bonosEmpresa.glob += bGlob;
             });
 
-            document.getElementById('b-b').innerText = "$" + bonosEmpresa.b.toLocaleString();
-            document.getElementById('b-family').innerText = "$" + bonosEmpresa.fam.toLocaleString();
-            document.getElementById('b-fem').innerText = "$" + bonosEmpresa.fem.toLocaleString();
+            document.getElementById('b-b-total').innerText = "$" + bonosEmpresa.b.toLocaleString();
+            document.getElementById('b-fam-total').innerText = "$" + bonosEmpresa.fam.toLocaleString();
+            document.getElementById('b-fem-total').innerText = "$" + bonosEmpresa.fem.toLocaleString();
             document.getElementById('b-glob-total').innerText = "$" + bonosEmpresa.glob.toLocaleString();
             document.getElementById('b-gran-total').innerText = "$" + bonosEmpresa.total.toLocaleString();
 
             const st = document.getElementById('status-global');
-            st.innerText = totalesE.g >= METAS_CAT.global ? "CUMPLIDA ✅" : "PENDIENTE ❌";
-            st.className = totalesE.g >= METAS_CAT.global ? "border border-slate-700 bg-green-600 text-white text-center py-4 text-sm" : "border border-slate-700 bg-rose-600 text-white text-center py-4 text-sm";
+            const cumpleG = totalesE.g >= METAS_CAT.global;
+            st.innerText = cumpleG ? "CUMPLIDA ✅" : "PENDIENTE ❌";
+            st.className = `p-6 border-r border-slate-700 text-center text-lg ${cumpleG ? 'bg-green-600' : 'bg-rose-600'}`;
         }
 
         function cargarDatos() {
@@ -220,55 +214,37 @@
         }
 
         function exportarExcelLimpio() {
-            const clean = (val) => {
-                if (!val) return 0;
-                let text = val.innerText || val;
-                let cleanVal = text.replace(/Meta:|Part:|\$|\.|%|\s/g, '').replace(',', '.');
-                return isNaN(parseFloat(cleanVal)) ? text : parseFloat(cleanVal);
-            };
-
-            const dataExcel = [
-                ["Vendedor", "Venta Baby", "Venta Family", "Venta Fem", "Total Venta", "Falta", "% Cumpl", "Bono Baby", "Bono Family", "Bono Fem", "Bono Global", "TOTAL PAGAR"]
-            ];
-
+            const dataExcel = [["Vendedor", "Venta Baby", "Venta Family", "Venta Fem", "Total Venta", "% Cumpl", "Bono Total"]];
             const rows = document.querySelectorAll('#vendedoresBody tr');
             rows.forEach((row, i) => {
                 dataExcel.push([
-                    row.cells[0].innerText,
-                    parseFloat(document.getElementById(`in-b-${i}`).value) || 0,
-                    parseFloat(document.getElementById(`in-fam-${i}`).value) || 0,
-                    parseFloat(document.getElementById(`in-fem-${i}`).value) || 0,
-                    clean(row.querySelector('.row-total')),
-                    clean(row.querySelector('.row-falta')),
-                    clean(row.querySelector('.row-pct')) / 100,
-                    clean(row.querySelector('.b-baby')),
-                    clean(row.querySelector('.b-fam')),
-                    clean(row.querySelector('.b-fem')),
-                    clean(row.querySelector('.b-glob')),
-                    clean(row.querySelector('.b-final'))
+                    vendedores[i].n,
+                    document.getElementById(`in-b-${i}`).value,
+                    document.getElementById(`in-fam-${i}`).value,
+                    document.getElementById(`in-fem-${i}`).value,
+                    row.querySelector('.row-total').innerText,
+                    row.querySelector('.row-pct').innerText,
+                    row.querySelector('.b-final').innerText
                 ]);
             });
-
             const ws = XLSX.utils.aoa_to_sheet(dataExcel);
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-            XLSX.writeFile(wb, "Reporte_Essity_Final.xlsx");
+            XLSX.utils.book_append_sheet(wb, ws, "Liquidacion");
+            XLSX.writeFile(wb, "Reporte_Essity.xlsx");
         }
 
         function enviarWhatsAppResumido() {
-            let t = "*BONOS ESSITY - DISTRILECO*%0A%0A";
-            const rows = document.querySelectorAll('#vendedoresBody tr');
+            let t = "*LIQUIDACIÓN ESSITY - DISTRILECO*%0A%0A";
             vendedores.forEach((v, i) => {
                 const total = document.querySelectorAll('.b-final')[i].innerText;
-                const pct = document.querySelectorAll('.row-pct')[i].innerText;
-                if(total !== "$0") t += `👤 *${v.n}*%0A💰 Bono: *${total}* (${pct})%0A---%0A`;
+                if(total !== "$0") t += `👤 *${v.n}*: ${total}%0A`;
             });
-            t += "%0A*PAGO TOTAL:* " + document.getElementById('b-gran-total').innerText;
+            t += "%0A*TOTAL EMPRESA:* " + document.getElementById('b-gran-total').innerText;
             window.open(`https://wa.me/573117700431?text=${t}`, '_blank');
         }
 
         function limpiarDatos() {
-            if (confirm("¿Borrar todos los datos ingresados?")) {
+            if (confirm("¿Borrar todos los datos?")) {
                 localStorage.removeItem('distrileco_essity_data');
                 location.reload();
             }
